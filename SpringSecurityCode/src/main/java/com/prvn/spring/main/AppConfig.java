@@ -3,6 +3,7 @@ package com.prvn.spring.main;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 
 /**
  * File    : AppConfig
@@ -14,6 +15,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 @Slf4j
+@ComponentScan("com.prvn.spring.*")
+//@EnableWebSecurity
 public class AppConfig {
     public static void main(String[] args) {
         SpringApplication.run(AppConfig.class, args);

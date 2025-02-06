@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: Security
+server:
+  port: 9999

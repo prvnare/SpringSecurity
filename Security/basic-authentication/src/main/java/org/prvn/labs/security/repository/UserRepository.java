@@ -9,5 +9,7 @@ import java.util.UUID;
 
 @Profile("userDefinedInDatabase")
 public interface UserRepository extends CrudRepository<User, UUID> {
-    Optional<User> getUserByUsername(String username);
+    Optional<User> findUserByUsername(String username);
+
+    void deleteUserByUsername(String username);
 }

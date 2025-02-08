@@ -4,6 +4,7 @@ import org.prvn.labs.security.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,10 +17,10 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import javax.sql.DataSource;
 
 @Configuration
-public class SecurityConfigs {
+public class SecurityConfigs  {
 
     @Bean
-    @Profile("userDefinedInMemory")
+    @Profile({"userDefinedInMemory","customAuthenticationProvider"})
     public UserDetailsService userDetailsService() {
         return new InMemoryUserDetailsManager(
                 new User("user", "password", AuthorityUtils.createAuthorityList("ROLE_USER")),
@@ -28,16 +29,39 @@ public class SecurityConfigs {
         );
     }
 
+    /*
+            Using custom Authentication Provider where it uses User Detail service
+            and Password Encoder to authenticate the user
+            UserDetailService is InMemoryUserDetailService
+            PasswordEncoder is NoOpPasswordEncoder
+
+            --> It's not mandatory  to always use same kind of UserDetailsService and PasswordEncoder
+            in the Authentication Provider. Somehow your Authentication Provider should be in capable of validating the
+            Authentication Request delegated to your custom authentication provider
+
+            --> Now, SpringSecurity is  capable of understanding your custom authentication provider so
+            it register this custom authentication provider with authentication manager and it adds to collection of
+            authentication provider
+
+     */
+
     @Bean
-    @Profile({"userDefinedInMemory",})
+    @Profile("customAuthenticationProvider")
+    public AuthenticationProvider authenticationProvider(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        return new CustomSecurityAuthenticationProvider(passwordEncoder, userDetailsService);
+    }
+
+
+    @Bean
+    @Profile({"userDefinedInMemory","customAuthenticationProvider"})
     public PasswordEncoder passwordEncoder() {
         return  NoOpPasswordEncoder.getInstance();
     }
 
+
     @Bean
     @Profile("userDefinedInDatabase")
-
-    public UserDetailsService userDetailsServiceDatabase(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserDetailsService getCustomUserDetailManager(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         // Using custom UserDetailManager which internally extends the UserDetailService
         return new SecurityUserDetailManager(userRepository, passwordEncoder);
     }
@@ -48,6 +72,7 @@ public class SecurityConfigs {
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 
 
     /* Using predefined JDBC connected User details service rather than using our own.
@@ -63,5 +88,6 @@ public class SecurityConfigs {
     public UserDetailsService userDetailsServiceDatabase(UserRepository userRepository) {
         return new SecurityUserDetailService(userRepository);
     }
+
 
 }

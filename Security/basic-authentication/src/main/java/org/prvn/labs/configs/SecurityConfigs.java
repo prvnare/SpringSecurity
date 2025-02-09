@@ -1,6 +1,9 @@
-package org.prvn.labs.security.configs;
+package org.prvn.labs.configs;
 
-import org.prvn.labs.security.repository.UserRepository;
+import org.prvn.labs.repository.UserRepository;
+import org.prvn.labs.security.service.SecurityUserDetailService;
+import org.prvn.labs.security.manager.SecurityUserDetailManager;
+import org.prvn.labs.security.provider.CustomSecurityAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -17,6 +20,7 @@ import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import javax.sql.DataSource;
 
 @Configuration
+@Profile({"userDefinedInMemory","customAuthenticationProvider", "userDefinedInDatabase"})
 public class SecurityConfigs  {
 
     @Bean
@@ -72,7 +76,6 @@ public class SecurityConfigs  {
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
 
 
     /* Using predefined JDBC connected User details service rather than using our own.

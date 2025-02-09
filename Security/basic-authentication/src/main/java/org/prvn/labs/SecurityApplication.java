@@ -1,4 +1,4 @@
-package org.prvn.labs.security;
+package org.prvn.labs;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

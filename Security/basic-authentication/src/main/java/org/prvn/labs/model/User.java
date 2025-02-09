@@ -1,4 +1,4 @@
-package org.prvn.labs.security.model;
+package org.prvn.labs.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

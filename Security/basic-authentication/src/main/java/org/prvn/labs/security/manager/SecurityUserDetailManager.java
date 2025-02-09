@@ -1,8 +1,9 @@
-package org.prvn.labs.security.configs;
+package org.prvn.labs.security.manager;
 
 import lombok.extern.slf4j.Slf4j;
-import org.prvn.labs.security.model.User;
-import org.prvn.labs.security.repository.UserRepository;
+import org.prvn.labs.model.User;
+import org.prvn.labs.repository.UserRepository;
+import org.prvn.labs.security.model.SecurityUserDetails;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -53,7 +54,7 @@ public class SecurityUserDetailManager implements UserDetailsManager {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         var optionalUser = userRepository.findUserByUsername(username);
-        var user = optionalUser.orElseThrow(() -> new UsernameNotFoundException(username));
+        var user = optionalUser.orElseThrow(() -> new UsernameNotFoundException("User not found"));
         return new SecurityUserDetails(user);
     }
 }

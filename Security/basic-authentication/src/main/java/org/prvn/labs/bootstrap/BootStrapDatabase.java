@@ -1,9 +1,9 @@
-package org.prvn.labs.security.bootstrap;
+package org.prvn.labs.bootstrap;
 
 
 import lombok.extern.slf4j.Slf4j;
-import org.prvn.labs.security.model.User;
-import org.prvn.labs.security.repository.UserRepository;
+import org.prvn.labs.model.User;
+import org.prvn.labs.repository.UserRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
-@Profile("userDefinedInDatabase")
+@Profile({"userDefinedInDatabase","OtpAuthentication"})
 public class BootStrapDatabase implements CommandLineRunner {
 
     private final UserRepository userRepository;

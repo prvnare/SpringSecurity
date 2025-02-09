@@ -1,4 +1,4 @@
-package org.prvn.labs.security.configs;
+package org.prvn.labs.security.provider;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -30,7 +30,7 @@ public class CustomSecurityAuthenticationProvider implements AuthenticationProvi
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
-         String username = authentication.getName();
+        String username = authentication.getName();
         String password = authentication.getCredentials().toString();
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         if(passwordEncoder.matches(password, userDetails.getPassword())) {

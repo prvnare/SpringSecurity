@@ -1,7 +1,8 @@
-package org.prvn.labs.security.configs;
+package org.prvn.labs.security.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.prvn.labs.security.repository.UserRepository;
+import org.prvn.labs.security.model.SecurityUserDetails;
+import org.prvn.labs.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

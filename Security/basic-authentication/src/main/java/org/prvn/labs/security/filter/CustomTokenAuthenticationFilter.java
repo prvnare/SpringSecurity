@@ -11,7 +11,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.List;
 
 public class CustomTokenAuthenticationFilter extends OncePerRequestFilter {
 
@@ -34,7 +33,7 @@ public class CustomTokenAuthenticationFilter extends OncePerRequestFilter {
         String token = request.getHeader("token");
 
         // create authentication object
-        CustomTokenAuthentication authentication = new CustomTokenAuthentication(token, List.of(()->"read"));
+        CustomTokenAuthentication authentication = new CustomTokenAuthentication(token);
 
         // validate with authentication manager
         Authentication fullyAuthentication = authenticationManager.authenticate(authentication);

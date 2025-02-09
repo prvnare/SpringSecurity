@@ -26,7 +26,6 @@ public class SecurityOTPUserDetailManager implements UserDetailsManager {
                 .otp(UUID.fromString(password))
                 .build();
         otpRepository.save(otp);
-
     }
 
     @Override

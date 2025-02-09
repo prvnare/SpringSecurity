@@ -3,8 +3,11 @@ package org.prvn.labs.configs;
 import org.prvn.labs.repository.OtpRepository;
 import org.prvn.labs.repository.UserRepository;
 import org.prvn.labs.security.filter.CustomAuthenticationFilter;
+import org.prvn.labs.security.filter.CustomTokenAuthenticationFilter;
 import org.prvn.labs.security.manager.SecurityOTPUserDetailManager;
 import org.prvn.labs.security.manager.SecurityUserDetailManager;
+import org.prvn.labs.security.manager.TokenManager;
+import org.prvn.labs.security.model.TokenProvider;
 import org.prvn.labs.security.provider.UsernameOTPAuthenticationProvider;
 import org.prvn.labs.security.provider.UsernamePasswordAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
@@ -45,28 +48,40 @@ public class SecurityCustomConfig {
         return new SecurityUserDetailManager(userRepository, passwordEncoder())  ;
     }
 
-    //Custom OTP UserDetailOTPManager
+    // Custom OTP UserDetailOTPManager
     @Bean
     public SecurityOTPUserDetailManager securityOTPUserDetailManager() {
        return  new SecurityOTPUserDetailManager(otpRepository);
     }
 
+    @Bean
+    public TokenManager tokenManager() {
+        return new TokenManager();
+    }
 
-    //custom provider to validate the otp
+    @Bean
+    public TokenProvider tokenProvider() {
+        return new TokenProvider(tokenManager());
+    }
+
+    // custom provider to validate the otp
     @Bean
     public UsernameOTPAuthenticationProvider usernameOTPAuthenticationProvider() {
         return new UsernameOTPAuthenticationProvider(securityOTPUserDetailManager());
     }
 
-    //custom provide to validate the username and password
+    // custom provide to validate the username and password
     @Bean
     public UsernamePasswordAuthenticationProvider usernamePasswordAuthenticationProvider() {
         return new UsernamePasswordAuthenticationProvider(passwordEncoder(), securityUserDetailManager());
     }
 
+
+    // authentication provider
+    // add all the authentication provides to the Manager
     @Bean
     public AuthenticationManager authenticationManager() {
-        return new ProviderManager(List.of(usernameOTPAuthenticationProvider(), usernamePasswordAuthenticationProvider()));
+        return new ProviderManager(List.of(usernameOTPAuthenticationProvider(), usernamePasswordAuthenticationProvider(), tokenProvider()));
     }
 
 
@@ -74,7 +89,8 @@ public class SecurityCustomConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                .addFilterBefore(new CustomAuthenticationFilter(authenticationManager(), securityOTPUserDetailManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(new CustomAuthenticationFilter(authenticationManager(), securityOTPUserDetailManager(), tokenManager()), UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(new CustomTokenAuthenticationFilter(authenticationManager()), CustomAuthenticationFilter.class)
                 .build();
     }
 

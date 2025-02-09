@@ -7,11 +7,11 @@ import org.prvn.labs.model.Otp;
 import org.prvn.labs.security.authentication.UsernameOTPAuthentication;
 import org.prvn.labs.security.authentication.UsernamePasswordAuthentication;
 import org.prvn.labs.security.manager.SecurityOTPUserDetailManager;
+import org.prvn.labs.security.manager.TokenManager;
 import org.prvn.labs.security.model.OTPUserDetails;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.util.List;
@@ -23,10 +23,12 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
     private final AuthenticationManager authenticationManager;
     private final SecurityOTPUserDetailManager otpUserDetailManager;
+    private final TokenManager tokenManager;
 
-    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, SecurityOTPUserDetailManager otpUserDetailManager) {
+    public CustomAuthenticationFilter(AuthenticationManager authenticationManager, SecurityOTPUserDetailManager otpUserDetailManager, TokenManager tokenManager) {
         this.authenticationManager = authenticationManager;
         this.otpUserDetailManager = otpUserDetailManager;
+        this.tokenManager = tokenManager;
     }
 
 
@@ -62,11 +64,14 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
         }else{
             Authentication authentication = new UsernameOTPAuthentication(username, otp, List.of(()->"read"));
-            authentication = authenticationManager.authenticate(authentication);
+            authenticationManager.authenticate(authentication);
 
             //generate random token and place it in response header
-            response.setHeader("token", UUID.randomUUID().toString());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            UUID token = UUID.randomUUID();
+            response.setHeader("token", token.toString());
+
+            // add this token to token manager
+            tokenManager.add(token);
         }
     }
 

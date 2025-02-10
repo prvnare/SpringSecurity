@@ -1,4 +1,4 @@
-package org.prvn.labs.security.model;
+package org.prvn.labs.security.provider;
 
 import org.prvn.labs.security.authentication.CustomTokenAuthentication;
 import org.prvn.labs.security.manager.TokenManager;
@@ -8,6 +8,7 @@ import org.springframework.security.authentication.ott.OneTimeTokenAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 
+import java.util.List;
 import java.util.UUID;
 
 public class TokenProvider implements AuthenticationProvider {
@@ -23,8 +24,7 @@ public class TokenProvider implements AuthenticationProvider {
         OneTimeTokenAuthenticationToken tokenAuthentication = (OneTimeTokenAuthenticationToken) authentication;
         var flag =  tokenManager.contains(UUID.fromString(tokenAuthentication.getTokenValue()));
         if(flag){
-            authentication.setAuthenticated(true);
-            return authentication;
+            return  new CustomTokenAuthentication(tokenAuthentication.getTokenValue(), List.of(() -> "read"));
         }else {
             throw new BadCredentialsException("Bad credentials");
         }

@@ -30,7 +30,7 @@ public class CustomTokenAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         //get token from the request header
-        String token = request.getHeader("token");
+        String token = request.getHeader("authorization");
 
         // create authentication object
         CustomTokenAuthentication authentication = new CustomTokenAuthentication(token);

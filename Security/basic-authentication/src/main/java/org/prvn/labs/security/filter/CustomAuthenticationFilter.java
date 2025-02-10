@@ -68,7 +68,7 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
 
             //generate random token and place it in response header
             UUID token = UUID.randomUUID();
-            response.setHeader("token", token.toString());
+            response.setHeader("authorization", token.toString());
 
             // add this token to token manager
             tokenManager.add(token);

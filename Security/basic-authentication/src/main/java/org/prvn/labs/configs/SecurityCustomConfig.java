@@ -7,7 +7,7 @@ import org.prvn.labs.security.filter.CustomTokenAuthenticationFilter;
 import org.prvn.labs.security.manager.SecurityOTPUserDetailManager;
 import org.prvn.labs.security.manager.SecurityUserDetailManager;
 import org.prvn.labs.security.manager.TokenManager;
-import org.prvn.labs.security.model.TokenProvider;
+import org.prvn.labs.security.provider.TokenProvider;
 import org.prvn.labs.security.provider.UsernameOTPAuthenticationProvider;
 import org.prvn.labs.security.provider.UsernamePasswordAuthenticationProvider;
 import org.springframework.context.annotation.Bean;

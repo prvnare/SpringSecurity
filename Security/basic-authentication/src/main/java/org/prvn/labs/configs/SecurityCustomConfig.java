@@ -54,6 +54,7 @@ public class SecurityCustomConfig {
        return  new SecurityOTPUserDetailManager(otpRepository);
     }
 
+
     @Bean
     public TokenManager tokenManager() {
         return new TokenManager();

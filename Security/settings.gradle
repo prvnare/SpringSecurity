@@ -1,3 +1,4 @@
 rootProject.name = 'Security'
 include 'basic-authentication'
+include 'basic-authorization'
 
